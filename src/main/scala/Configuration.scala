@@ -1,15 +1,36 @@
 package jp.w3ch.psm
 
+import java.net.InetSocketAddress
+import com.twitter.finagle.http.Http
+import com.twitter.finagle.builder.{Server, ServerBuilder}
+
+import com.twitter.conversions.time._
 
 import org.jboss.netty.handler.codec.http._
 
-class Configuration extends com.twitter.util.Config[MyServer] with ConfigurationUtil {
+class Configuration extends com.twitter.util.Config[Server] with ConfigurationUtil {
+  // parameters
+  var listen = required[Int]
   var proxyHandler = required[MyServer.ProxyHandler]
 
   def proxy:MyServer.ProxyHandler = proxyHandler
   def proxy_=(proxy: MyServer.ProxyHandler) { proxyHandler = proxy }
 
-  override def apply = new MyServer(proxyHandler)
+
+  // building process
+
+  override def apply = {
+    val sb = ServerBuilder()
+      .name   ("httpserver")
+      .codec  (Http())
+      .bindTo (new InetSocketAddress(listen))
+
+    sb.maxConcurrentRequests     (2)
+      .hostConnectionMaxLifeTime (5.minutes)
+      .readTimeout               (2.minutes)
+
+    sb.build(new MyServer(proxyHandler))
+  }
 }
 
 trait ConfigurationUtil {
@@ -18,6 +39,8 @@ trait ConfigurationUtil {
   val textResponse = Services.textResponse(_)
 }
 
+
+// 
 
 sealed class HostUrl {}
 case class Host(host:String, port:Int) extends HostUrl {}
