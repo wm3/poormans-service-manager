@@ -3,9 +3,6 @@ package jp.w3ch.psm
 
 import org.jboss.netty.handler.codec.http._
 
-import com.twitter.util.Eval
-import com.twitter.finagle.Service
-
 class Configuration extends com.twitter.util.Config[MyServer] with ConfigurationUtil {
   var proxyHandler = required[MyServer.ProxyHandler]
 
@@ -19,28 +16,6 @@ trait ConfigurationUtil {
   val nullProxyHandler: MyServer.ProxyHandler = { case _ if false => throw new Exception() }
   val proxyThat = Services.proxyThat(_)
   val textResponse = Services.textResponse(_)
-}
-
-trait ConfigurationLoader {
-
-  def load():Option[Configuration]
-}
-
-
-class FileConfigurationLoader(file: String) extends ConfigurationLoader {
-
-  import scala.io.Source
-
-  override def load() = {
-    try {
-      Some(new Eval()(Source.fromFile(file).mkString))
-    } catch {
-      case e:Exception =>
-        println(e)
-        None
-    }
-  }
-
 }
 
 
