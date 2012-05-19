@@ -15,7 +15,7 @@ object MyServer {
 
 class MyServer(proxy: MyServer.ProxyHandler) extends Service[HttpRequest, HttpResponse] {
 
-  val defaultServer = Services.textResponse("hello")
+  val defaultServer = new service.TextResponse("hello")
   val getDefaultServer: MyServer.ProxyHandler = { case _ => defaultServer }
 
   override def apply(request: HttpRequest) = {
