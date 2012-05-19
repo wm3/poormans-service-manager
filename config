@@ -4,8 +4,10 @@ new Configuration {
   listen = 3000
 
   proxy = {
-    case Host("127.0.0.1", _) => daemon("sh -c 'cd sam; echo node; exec node app.js'", 3001)
+    case Host("127.0.0.1", _) => someApplication
     case Host("localhost", _) => port(80)
     case _                    => textResponse("hello")
   }
+
+  val someApplication = daemon("sh -c 'cd sam; echo node; exec node app.js'", 3001)
 }
