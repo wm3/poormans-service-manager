@@ -36,6 +36,7 @@ class Configuration extends com.twitter.util.Config[Server] with ConfigurationUt
 trait ConfigurationUtil {
   val nullProxyHandler: MyServer.ProxyHandler = { case _ if false => throw new Exception() }
   val port = new service.Port(_:Int)
+  val daemon = new service.Daemon(_:String, _:Int)
   val textResponse = new service.TextResponse(_)
 }
 

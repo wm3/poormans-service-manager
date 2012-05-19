@@ -6,22 +6,12 @@ import com.twitter.finagle.builder.ClientBuilder
 import com.twitter.finagle.http.{Http}
 import org.jboss.netty.handler.codec.http._
 
-import jp.w3ch.psm.daemon.Daemon
-
 
 class Port(address:InetSocketAddress) extends HttpService {
 
-  val daemon = Daemon("sh -c 'cd sam; exec node app.js'")
-
   def this(address: Int) = this(new InetSocketAddress(address))
 
-  def activateDaemon() {
-    if ( ! daemon.isRunning && true) daemon.exec()
-  }
-
   override def apply(request:HttpRequest) = {
-
-    activateDaemon()
 
     val client = ClientBuilder()
       .codec(Http())
