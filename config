@@ -1,0 +1,9 @@
+import jp.w3ch.psm._
+
+new Configuration {
+  proxy = {
+    case Host("127.0.0.1", _) => proxyThat(3001)
+    case Host("localhost", _) => proxyThat(80)
+    case _                    => textResponse("hello")
+  }
+}
