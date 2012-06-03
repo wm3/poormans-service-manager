@@ -9,7 +9,7 @@ import org.jboss.netty.handler.codec.http._
 
 class Port(address:InetSocketAddress) extends HttpService {
 
-  def this(address: Int) = this(new InetSocketAddress(address))
+  def this(address: Int) = this(new InetSocketAddress("127.0.0.1", address))
 
   override def apply(request:HttpRequest) = {
 
