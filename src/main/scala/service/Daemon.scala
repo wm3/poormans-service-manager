@@ -6,20 +6,19 @@ import com.twitter.conversions.time._
 import com.twitter.finagle.builder.ClientBuilder
 import com.twitter.finagle.service.{Backoff,RetryPolicy}
 import com.twitter.finagle.http.{Http,Request,Method}
-import com.twitter.util.{Future,Promise}
+import com.twitter.util.{Future,Promise,Time}
 import org.jboss.netty.handler.codec.http._
 
 import jp.w3ch.psm.daemon
-
+import jp.w3ch.psm.util.Timer;
 
 class Daemon(command:String, address:InetSocketAddress) extends HttpService {
-
   val executor = daemon.Daemon(command)
   val port = new Port(address)
 
-  lazy val exec = executor.exec()
+  def exec = executor.exec()
 
-  def this(command:String, address: Int) = this(command, new InetSocketAddress(address))
+  def this(command:String, address: Int) = this(command, new InetSocketAddress("127.0.0.1", address))
 
   override def apply(request:HttpRequest) = {
     for {

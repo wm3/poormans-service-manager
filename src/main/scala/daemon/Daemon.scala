@@ -8,7 +8,7 @@ class Daemon(executor: (() => Instance)) {
   var instance: Option[Instance] = None
 
   def exec() {
-    if (instance.isDefined) throw new IllegalStateException()
+    if (isRunning) return;
 
     instance = Some(executor())
   }
