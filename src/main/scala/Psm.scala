@@ -15,13 +15,13 @@ object Psm {
   val configPath = "config"
 
   def main(args:Array[String]) {
+    var config = new Eval().apply[Configuration](new File(configPath))
     val server = {
-      val config = new Eval().apply[Configuration](new File(configPath))
       config()
     }
 
-    // quit this program if some key is pressed
-    System.in.read();
+    println("Listening on port " + config.listen.toInt + ". Press any key to quit.")
+    System.in.read()
 
     server.close(4.seconds)
   }
