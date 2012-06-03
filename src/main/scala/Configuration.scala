@@ -15,10 +15,10 @@ class Configuration extends com.twitter.util.Config[Server] with ConfigurationUt
   // ----------------------------------------------------------------
 
   var listen = required[Int]
-  var proxyHandler = required[MyServer.ProxyHandler]
+  var proxyHandler = required[DispatchingServer.ProxyHandler]
 
-  def proxy:MyServer.ProxyHandler = proxyHandler
-  def proxy_=(proxy: MyServer.ProxyHandler) { proxyHandler = proxy }
+  def proxy:DispatchingServer.ProxyHandler = proxyHandler
+  def proxy_=(proxy: DispatchingServer.ProxyHandler) { proxyHandler = proxy }
 
 
   // ----------------------------------------------------------------
@@ -35,7 +35,7 @@ class Configuration extends com.twitter.util.Config[Server] with ConfigurationUt
       .hostConnectionMaxLifeTime (5.minutes)
       .readTimeout               (2.minutes)
 
-    sb.build(new MyServer(proxyHandler))
+    sb.build(new DispatchingServer(proxyHandler))
   }
 }
 
@@ -45,7 +45,7 @@ class Configuration extends com.twitter.util.Config[Server] with ConfigurationUt
 // ----------------------------------------------------------------
 
 trait ConfigurationUtil {
-  val nullProxyHandler: MyServer.ProxyHandler = { case _ if false => throw new Exception() }
+  val nullProxyHandler: DispatchingServer.ProxyHandler = { case _ if false => throw new Exception() }
   val port = new service.Port(_:Int)
   val daemon = new service.Daemon(_:String, _:Int)
   val textResponse = new service.TextResponse(_)

@@ -9,14 +9,14 @@ import org.jboss.netty.handler.codec.http.HttpResponseStatus._
 import com.twitter.finagle.Service
 
 
-object MyServer {
+object DispatchingServer {
   type ProxyHandler = PartialFunction[HostUrl, Service[HttpRequest, HttpResponse]]
 }
 
-class MyServer(proxy: MyServer.ProxyHandler) extends Service[HttpRequest, HttpResponse] {
+class DispatchingServer(proxy: DispatchingServer.ProxyHandler) extends Service[HttpRequest, HttpResponse] {
 
   val defaultServer = new service.TextResponse("hello")
-  val getDefaultServer: MyServer.ProxyHandler = { case _ => defaultServer }
+  val getDefaultServer: DispatchingServer.ProxyHandler = { case _ => defaultServer }
 
   override def apply(request: HttpRequest) = {
     val host = Option(request.getHeader("Host"))
