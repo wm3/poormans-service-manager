@@ -13,6 +13,14 @@ import jp.w3ch.psm.daemon
 import jp.w3ch.psm.util.Timer;
 
 class Daemon(command:String, address:InetSocketAddress) extends HttpService {
+  var lastRequestedAt = Time.now
+
+  val stopTimer = Timer.schedule(5.seconds) {
+    if(lastRequestedAt + 5.minutes < Time.now) {
+      executor.stop()
+    }
+  }
+
   val executor = daemon.Daemon(command)
   val port = new Port(address)
 
@@ -21,6 +29,7 @@ class Daemon(command:String, address:InetSocketAddress) extends HttpService {
   def this(command:String, address: Int) = this(command, new InetSocketAddress("127.0.0.1", address))
 
   override def apply(request:HttpRequest) = {
+    lastRequestedAt = Time.now
     for {
       _ <- waitForPort(1)
              .rescue {
