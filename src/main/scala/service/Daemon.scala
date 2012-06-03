@@ -37,7 +37,7 @@ class Daemon(command:String, address:InetSocketAddress) extends HttpService {
       .hosts(address)
       .hostConnectionLimit(1)
       .retryPolicy(
-        RetryPolicy.backoff(Backoff.const(500.milliseconds).take(3))(RetryPolicy.WriteExceptionsOnly))
+        RetryPolicy.backoff(Backoff.const(500.milliseconds).take(retry - 1))(RetryPolicy.WriteExceptionsOnly))
       .build()
 
     client(Request(Method.Head, "/")).unit
