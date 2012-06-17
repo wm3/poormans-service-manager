@@ -6,6 +6,7 @@ import org.specs2.mutable._
 import org.specs2.mock._
 
 import jp.w3ch.psm.DispatchingServer
+import jp.w3ch.psm.service.HttpService
 
 
 class ConfigurationSpec extends Specification with Mockito {
@@ -13,7 +14,7 @@ class ConfigurationSpec extends Specification with Mockito {
   "can register a listener" >> {
 
     "with a minimum setting" in {
-      val service = mock[DispatchingServer.Proxy]
+      val service = mock[HttpService]
 
       val config = new Configuration {
         listen = 3000
@@ -24,7 +25,7 @@ class ConfigurationSpec extends Specification with Mockito {
     }
 
     "with a virtal host" in {
-      val service = mock[DispatchingServer.Proxy]
+      val service = mock[HttpService]
 
       val config = new Configuration {
         listen = 3000

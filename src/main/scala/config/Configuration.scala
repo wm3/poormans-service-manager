@@ -8,6 +8,7 @@ import com.twitter.finagle.builder.{Server, ServerBuilder}
 import com.twitter.conversions.time._
 import org.jboss.netty.handler.codec.http._
 
+import jp.w3ch.psm.service.HttpService
 import jp.w3ch.psm.DispatchingServer
 
 
@@ -20,8 +21,8 @@ class Configuration extends com.twitter.util.Config[Server] with ConfigurationUt
   // ----------------------------------------------------------------
 
   var listen = required[Int]
-  var defaultProxy = required[Proxy]
-  val proxyHandler = mutable.Buffer[(HostUrl, Proxy)]()
+  var defaultProxy = required[HttpService]
+  val proxyHandler = mutable.Buffer[(HostUrl, HttpService)]()
 
 
   // ----------------------------------------------------------------
@@ -47,14 +48,14 @@ class Configuration extends com.twitter.util.Config[Server] with ConfigurationUt
   // ----------------------------------------------------------------
 
   def when(host:String) = new ProxyCondition((HostUrl(host), _))
-  class ProxyCondition(makePartial: Proxy => (HostUrl, Proxy)) {
-    def ->(service:Proxy) {
+  class ProxyCondition(makePartial: HttpService => (HostUrl, HttpService)) {
+    def ->(service:HttpService) {
       proxyHandler += makePartial(service)
     }
   }
 
   object default {
-    def ->(service:Proxy) {
+    def ->(service:HttpService) {
       defaultProxy = service
     }
   }
