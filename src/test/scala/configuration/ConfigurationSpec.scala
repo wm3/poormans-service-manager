@@ -1,9 +1,12 @@
-package jp.w3ch.psm
+package jp.w3ch.psm.config
 
 import org.jboss.netty.handler.codec.http._
 import com.twitter.finagle.Service
 import org.specs2.mutable._
 import org.specs2.mock._
+
+import jp.w3ch.psm.DispatchingServer
+
 
 class ConfigurationSpec extends Specification with Mockito {
 

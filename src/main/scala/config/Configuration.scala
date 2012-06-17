@@ -1,4 +1,4 @@
-package jp.w3ch.psm
+package jp.w3ch.psm.config
 
 import java.net.InetSocketAddress
 import com.twitter.finagle.http.Http
@@ -7,6 +7,9 @@ import com.twitter.finagle.builder.{Server, ServerBuilder}
 import com.twitter.conversions.time._
 
 import org.jboss.netty.handler.codec.http._
+
+import jp.w3ch.psm.DispatchingServer
+
 
 class Configuration extends com.twitter.util.Config[Server] with ConfigurationUtil {
 
@@ -64,6 +67,9 @@ class Configuration extends com.twitter.util.Config[Server] with ConfigurationUt
 // ----------------------------------------------------------------
 
 trait ConfigurationUtil {
+
+  import jp.w3ch.psm.service
+
   val port = new service.Port(_:Int)
   val daemon = new service.Daemon(_:String, _:Int)
   val textResponse = new service.TextResponse(_)
