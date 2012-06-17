@@ -6,7 +6,7 @@ import com.twitter.finagle.Service
 
 
 class DispatchingServer(
-    val dispatch: DispatchingServer.ProxyHandler,
+    val dispatch: Seq[DispatchingServer.ProxyEntry],
     val default: service.HttpService
 ) extends Service[HttpRequest, HttpResponse] {
 
@@ -32,7 +32,7 @@ class DispatchingServer(
 }
 
 object DispatchingServer {
-  type ProxyHandler = Seq[(HostUrl, service.HttpService)]
+  type ProxyEntry = (HostUrl, service.HttpService)
 
   /**
    * (仮想)ホスト名情報を指すクラスです。

@@ -14,15 +14,13 @@ import jp.w3ch.psm.DispatchingServer
 
 class Configuration extends com.twitter.util.Config[Server] with ConfigurationUtil {
 
-  import DispatchingServer._
-
   // ----------------------------------------------------------------
   //     Parameters
   // ----------------------------------------------------------------
 
   var listen = required[Int]
   var defaultProxy = required[HttpService]
-  val proxyHandler = mutable.Buffer[(HostUrl, HttpService)]()
+  val proxyHandler = mutable.Buffer[DispatchingServer.ProxyEntry]()
 
 
   // ----------------------------------------------------------------
@@ -47,10 +45,10 @@ class Configuration extends com.twitter.util.Config[Server] with ConfigurationUt
   //     Proxy settings
   // ----------------------------------------------------------------
 
-  def when(host:String) = new ProxyCondition((HostUrl(host), _))
-  class ProxyCondition(makePartial: HttpService => (HostUrl, HttpService)) {
+  def when(host:String) = new ProxyCondition(DispatchingServer.HostUrl(host))
+  class ProxyCondition(hostUrl: DispatchingServer.HostUrl) {
     def ->(service:HttpService) {
-      proxyHandler += makePartial(service)
+      proxyHandler += ((hostUrl, service))
     }
   }
 
