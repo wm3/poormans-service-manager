@@ -1,11 +1,11 @@
 package jp.w3ch.psm.config
 
 import java.net.InetSocketAddress
+import scala.collection.mutable
+
 import com.twitter.finagle.http.Http
 import com.twitter.finagle.builder.{Server, ServerBuilder}
-
 import com.twitter.conversions.time._
-
 import org.jboss.netty.handler.codec.http._
 
 import jp.w3ch.psm.DispatchingServer
@@ -21,7 +21,7 @@ class Configuration extends com.twitter.util.Config[Server] with ConfigurationUt
 
   var listen = required[Int]
   var defaultProxy = required[Proxy]
-  val proxyHandler = scala.collection.mutable.Buffer[(HostUrl, Proxy)]()
+  val proxyHandler = mutable.Buffer[(HostUrl, Proxy)]()
 
 
   // ----------------------------------------------------------------
