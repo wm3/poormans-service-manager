@@ -10,9 +10,10 @@ import org.jboss.netty.handler.codec.http._
 
 import jp.w3ch.psm.service.HttpService
 import jp.w3ch.psm.DispatchingServer
+import jp.w3ch.psm.daemon.{Daemon,Pool}
 
 
-class Configuration extends com.twitter.util.Config[Server] with ConfigurationUtil {
+class Configuration extends com.twitter.util.Config[(Server, Pool)] with ConfigurationUtil {
 
   // ----------------------------------------------------------------
   //     Parameters
@@ -21,6 +22,7 @@ class Configuration extends com.twitter.util.Config[Server] with ConfigurationUt
   var listen = required[Int]
   var defaultProxy = required[HttpService]
   val proxyHandler = mutable.Buffer[DispatchingServer.ProxyEntry]()
+  val pool = mutable.Buffer[Daemon]()
 
 
   // ----------------------------------------------------------------
@@ -37,7 +39,10 @@ class Configuration extends com.twitter.util.Config[Server] with ConfigurationUt
       .hostConnectionMaxLifeTime (5.minutes)
       .readTimeout               (2.minutes)
 
-    sb.build(new DispatchingServer(proxyHandler.readOnly, defaultProxy))
+    (
+      sb.build(new DispatchingServer(proxyHandler.readOnly, defaultProxy)),
+      new Pool(pool.readOnly)
+    )
   }
 
 
@@ -56,6 +61,10 @@ class Configuration extends com.twitter.util.Config[Server] with ConfigurationUt
     def ->(service:HttpService) {
       defaultProxy = service
     }
+  }
+
+  override def addDaemon(d:Daemon) {
+    pool += d
   }
 
 }

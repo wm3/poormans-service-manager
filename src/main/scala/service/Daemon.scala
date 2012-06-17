@@ -12,7 +12,7 @@ import org.jboss.netty.handler.codec.http._
 import jp.w3ch.psm.daemon
 import jp.w3ch.psm.util.Timer;
 
-class Daemon(command:String, address:InetSocketAddress) extends HttpService {
+class Daemon(dm:daemon.Daemon, address:InetSocketAddress) extends HttpService {
   var lastRequestedAt = Time.now
 
   val stopTimer = Timer.schedule(5.seconds) {
@@ -21,12 +21,12 @@ class Daemon(command:String, address:InetSocketAddress) extends HttpService {
     }
   }
 
-  val executor = daemon.Daemon(command)
+  val executor = dm
   val port = new Port(address)
 
   def exec = executor.exec()
 
-  def this(command:String, address: Int) = this(command, new InetSocketAddress("127.0.0.1", address))
+  def this(dm:daemon.Daemon, address: Int) = this(dm, new InetSocketAddress("127.0.0.1", address))
 
   override def apply(request:HttpRequest) = {
     lastRequestedAt = Time.now

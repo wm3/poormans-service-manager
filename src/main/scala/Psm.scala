@@ -17,14 +17,13 @@ object Psm {
 
   def main(args:Array[String]) {
     var config = new Eval().apply[Configuration](new File(configPath))
-    val server = {
-      config()
-    }
+    val (server, pool) = config()
 
     println("Listening on port " + config.listen.toInt + ". Press any key to quit.")
     System.in.read()
 
     server.close(4.seconds)
+    pool.stop()
   }
 }
 
