@@ -1,4 +1,4 @@
-import jp.w3ch.psm._
+import jp.w3ch.psm.config._
 
 new Configuration {
   listen = 3000
