@@ -5,27 +5,54 @@ import org.jboss.netty.handler.codec.http._
 import com.twitter.finagle.Service
 
 
-class DispatchingServer(dispatch: DispatchingServer.ProxyHandler) extends Service[HttpRequest, HttpResponse] {
+class DispatchingServer(
+    val dispatch: DispatchingServer.ProxyHandler,
+    val default: DispatchingServer.Proxy
+) extends Service[HttpRequest, HttpResponse] {
 
   val defaultService = new service.TextResponse("hello")
 
   override def apply(request: HttpRequest) = {
     val host = Option(request.getHeader("Host"))
 
-    val service = doDispatch(HostUrl(host))
+    val service = doDispatch(host)
 
     service(request)
   }
 
 
-  private[this] val doDispatch: DispatchingServer.ProxyHandler = dispatch orElse {
-    case _ => defaultService
+  private[this] def doDispatch(url:Option[String]): DispatchingServer.Proxy = {
+    if ( ! url.isDefined) return default
+
+    dispatch.find { _._1(url.get) }
+      .map { _._2 }
+      .getOrElse(default)
   }
 
 }
 
 object DispatchingServer {
-  type ProxyHandler = PartialFunction[HostUrl, Service[HttpRequest, HttpResponse]]
+  type Proxy = Service[HttpRequest, HttpResponse]
+  type ProxyHandler = Seq[(HostUrl, Proxy)]
+
+  /**
+   * (仮想)ホスト名情報を指すクラスです。
+   */
+  case class HostUrl(host:String) {
+    def apply(name: String): Boolean = {
+      name match {
+        case HostUrl.re(this.host, _) => true
+        case _                        => false
+      }
+    }
+  }
+
+  object HostUrl {
+
+    val re = """([^/:]+)(?::(\d+))?""".r
+
+  }
+
 }
 
 // vim: set shiftwidth=2 expandtab :

@@ -3,11 +3,7 @@ import jp.w3ch.psm._
 new Configuration {
   listen = 3000
 
-  proxy = {
-    case Host("127.0.0.1", _) => someApplication
-    case Host("localhost", _) => port(80)
-    case _                    => textResponse("hello")
-  }
-
-  val someApplication = daemon("sh -c 'cd sam; echo node; exec node app.js'", 3001)
+  when("127.0.0.1") -> daemon("sh -c 'cd sam; echo node; exec node app.js'", 3001)
+  when("localhost") -> port(80)
+  default           -> textResponse("hello")
 }

@@ -20,12 +20,16 @@ libraryDependencies ++= Seq(
 	"com.twitter" % "util-core_2.9.1" % "3.0.0",
 	"com.twitter" % "util-eval_2.9.1" % "3.0.0",
 	"com.twitter" % "finagle-core_2.9.1" % "3.0.0",
-	"com.twitter" % "finagle-http_2.9.1" % "3.0.0"
+	"com.twitter" % "finagle-http_2.9.1" % "3.0.0",
+	"org.specs2" %% "specs2" % "1.11" % "test",
+	"org.mockito" % "mockito-all" % "1.9.0" % "test"
 )
 
 resolvers ++= Seq(
 	"Twitter Scala Library Repositories" at "http://maven.twttr.com/",
-	"codahale" at "http://repo.codahale.com"
+	"codahale" at "http://repo.codahale.com",
+	"sonatype snapshots" at "http://oss.sonatype.org/content/repositories/snapshots",
+	"sonatype releases"  at "http://oss.sonatype.org/content/repositories/releases"
 )
 
 
