@@ -43,7 +43,7 @@ class Configuration extends com.twitter.util.Config[Server] with ConfigurationUt
 
 
   // ----------------------------------------------------------------
-  //     Building process
+  //     Proxy settings
   // ----------------------------------------------------------------
 
   def when(host:String) = new ProxyCondition((HostUrl(host), _))
@@ -60,21 +60,6 @@ class Configuration extends com.twitter.util.Config[Server] with ConfigurationUt
   }
 
 }
-
-
-// ----------------------------------------------------------------
-//     Utilities
-// ----------------------------------------------------------------
-
-trait ConfigurationUtil {
-
-  import jp.w3ch.psm.service
-
-  val port = new service.Port(_:Int)
-  val daemon = new service.Daemon(_:String, _:Int)
-  val textResponse = new service.TextResponse(_)
-}
-
 
 
 // vim: set shiftwidth=2 expandtab :
